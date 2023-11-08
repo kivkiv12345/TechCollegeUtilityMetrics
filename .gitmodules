@@ -1,3 +1,6 @@
 [submodule "submodules/KafkaProducerConsumer"]
 	path = submodules/KafkaProducerConsumer
 	url = https://github.com/RasmusWind/KafkaProducerConsumer
+[submodule "submodules/Csharp-Consumers"]
+	path = submodules/Csharp-Consumers
+	url = https://github.com/Cordsenboyz/Csharp-Consumers.git

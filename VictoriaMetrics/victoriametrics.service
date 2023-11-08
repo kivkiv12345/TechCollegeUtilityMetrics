@@ -1,0 +1,16 @@
+[Unit]
+Description=VictoriaMetrics Service
+After=network.target
+
+[Service]
+Type=simple
+StartLimitBurst=5
+StartLimitInterval=0
+Restart=on-failure
+RestartSec=1
+PIDFile=/run/victoria-metrics/victoriametrics.pid
+ExecStart=/usr/local/bin/victoria-metrics-prod -storageDataPath /var/lib/victoria-metrics -promscrape.suppressScrapeErrors -promscrape.config /etc/victoria-metrics/prometheus.yml -retentionPeriod 15y -search.latencyOffset 0 -search.setLookbackToStep=true -search.cacheTimestampOffset=10519200m0s
+ExecStop=/bin/kill -s SIGTERM 
+
+[Install]
+WantedBy=multi-user.target

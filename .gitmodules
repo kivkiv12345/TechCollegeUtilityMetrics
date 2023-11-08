@@ -1,0 +1,3 @@
+[submodule "submodules/KafkaProducerConsumer"]
+	path = submodules/KafkaProducerConsumer
+	url = https://github.com/RasmusWind/KafkaProducerConsumer

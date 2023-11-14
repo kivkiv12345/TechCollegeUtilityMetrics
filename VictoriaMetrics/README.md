@@ -1,2 +1,4 @@
-Put the service in: /etc/systemd/system/
-Put the binary in: /usr/local/bin/
+
+Put victoriametrics.service in:             /etc/systemd/system/
+
+Put the victoria-metrics-prod binary in:    /usr/local/bin/

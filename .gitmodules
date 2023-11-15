@@ -4,6 +4,6 @@
 [submodule "submodules/Csharp-Consumers"]
 	path = submodules/Csharp-Consumers
 	url = https://github.com/Cordsenboyz/Csharp-Consumers.git
-[submodule "ckafprod"]
-	path = ckafprod
+[submodule "submodules/ckafprod"]
+	path = submodules/ckafprod
 	url = https://github.com/kivkiv12345/ckafprod.git

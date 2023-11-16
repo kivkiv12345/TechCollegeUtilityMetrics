@@ -11,7 +11,7 @@ data_dict = {}
 # Define the Kafka consumer configuration
 conf = {
     'bootstrap.servers': '172.16.250.13:9092,172.16.250.14:9092',  # Replace with your Kafka broker(s) address
-    'group.id': 'seasonsPower18',       # Consumer group ID
+    'group.id': 'seasonsPower29',       # Consumer group ID
     'auto.offset.reset': 'earliest'       # Start from the beginning of the topic
 }
 
@@ -32,14 +32,13 @@ async def get_season(date):
 async def consume_messages(topic):
     consumer = Consumer(conf)
     consumer.subscribe([topic])
-    batch_size = 1500  # Number of messages to batch before sending
+    batch_size = 50000  # Number of messages to batch before sending
     iteration = 0
 
     try:
         batch = []
         while True:
-            iteration = iteration + 1
-            msg = consumer.poll(0.1)
+            msg = consumer.poll()
             if msg is None:
                 print('Polling returned None')
                 continue
@@ -51,26 +50,22 @@ async def consume_messages(topic):
                     print('Error while consuming message: {}'.format(msg.error()))
             else:
                 value = json.loads(msg.value().decode('utf-8'))
-                timestamp_ms = value.get('timestamp')
+                timestamp_s = value.get('timestamp')
                 house_id = value.get('house_id')
                 kwh = value.get('kwh')
-                timestamp_s = timestamp_ms / 1000
+                # timestamp_s = timestamp_ms / 1000
                 date = datetime.utcfromtimestamp(float(timestamp_s))
                 month = date.strftime("%B")
                 season = await get_season(date)
-                
-                data_string = f"seasonsPower18{{house_id=\"{house_id}\", season=\"{season}\", month=\"{month}\"}} {kwh} {timestamp_s}"
+                data_string = f"seasonsPower29{{house_id=\"{house_id}\", season=\"{season}\", month=\"{month}\"}} {kwh} {timestamp_s}"
                 batch.append(data_string)
             
                 if len(batch) >= batch_size: # Send after reaching batch size or after 3 seconds
                     # print('Sendig batch')
                     await process_batch(batch)
                     batch = []  # Reset the batch
-                    # start_time = time.time() # Reset timer
-
-            # if len(batch) > 0 and time.time() - start_time < 3:
-            #     await process_batch(batch)
-            print(iteration)
+                    iteration = iteration + batch_size
+                    print(iteration)
 
     finally:
         if len(batch) > 0:
